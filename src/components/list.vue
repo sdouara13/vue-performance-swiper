@@ -12,6 +12,7 @@
       :pageHeight="pageHeight"
       :trigger="'touch'"
       :prevLoadNumber="5"
+      :template="template"
       @reload="notifyFromCarosuel"
       @handler="getCarosuelHandler"
       @prevData="updatePrevData"
@@ -19,59 +20,59 @@
       @nextData="updateNextData"
       @pageTurning="pageTurning"
     >
-      <div slot="prevPage">
-        <div v-if="prevData" class="song-block">
-          <!--视图块 BEGIN-->
-          <div class="song-item"
-               :key="item" v-for='item in  apiObj.page_item'
-               @touchstart.stop.prevent=""
-               @touchmove.stop.prevent=""
-               @touchend.stop.prevent=""
-          >
-            {{ prevData.data[item - 1] }}
-            <!--<songItem :item="prevData.data[item - 1]" ></songItem>-->
-            <!--<div class="songbox" v-songBox="{width: 763, height: 168,data: prevData.data[item - 1]?prevData.data[item - 1]: null}"></div>-->
+      <!--<div slot="prevPage">-->
+        <!--<div v-if="prevData" class="song-block">-->
+          <!--&lt;!&ndash;视图块 BEGIN&ndash;&gt;-->
+          <!--<div class="song-item"-->
+               <!--:key="item" v-for='item in  apiObj.page_item'-->
+               <!--@touchstart.stop.prevent=""-->
+               <!--@touchmove.stop.prevent=""-->
+               <!--@touchend.stop.prevent=""-->
+          <!--&gt;-->
+            <!--{{ prevData.data[item - 1] }}-->
+            <!--&lt;!&ndash;<songItem :item="prevData.data[item - 1]" ></songItem>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="songbox" v-songBox="{width: 763, height: 168,data: prevData.data[item - 1]?prevData.data[item - 1]: null}"></div>&ndash;&gt;-->
 
-          </div>
-          <!--视图块 END-->
-        </div>
-      </div>
-      <div slot="centerPage">
+          <!--</div>-->
+          <!--&lt;!&ndash;视图块 END&ndash;&gt;-->
+        <!--</div>-->
+      <!--</div>-->
 
-        <div v-if="centerData" class="song-block">
-          <!--视图块 BEGIN-->
-          <div class="song-item"
-               :key="item" v-for='item in apiObj.page_item'
-               @touchstart.stop.prevent=""
-               @touchmove.stop.prevent=""
-               @touchend.stop.prevent=''
-          >
-            {{ centerData.data[item - 1] }}
-            <!--<songItem :item="centerData.data[item - 1]"></songItem>-->
-            <!--<div class="songbox" v-songBox="{width: 763, height: 168,data: centerData.data[item - 1]?centerData.data[item - 1]: null}"></div>-->
+      <!--<div slot="centerPage">-->
+        <!--<div v-if="centerData" class="song-block">-->
+          <!--&lt;!&ndash;视图块 BEGIN&ndash;&gt;-->
+          <!--<div class="song-item"-->
+               <!--:key="item" v-for='item in apiObj.page_item'-->
+               <!--@touchstart.stop.prevent=""-->
+               <!--@touchmove.stop.prevent=""-->
+               <!--@touchend.stop.prevent=''-->
+          <!--&gt;-->
+            <!--{{ centerData.data[item - 1] }}-->
+            <!--&lt;!&ndash;<songItem :item="centerData.data[item - 1]"></songItem>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="songbox" v-songBox="{width: 763, height: 168,data: centerData.data[item - 1]?centerData.data[item - 1]: null}"></div>&ndash;&gt;-->
 
-          </div>
-          <!--视图块 END-->
-        </div>
+          <!--</div>-->
+          <!--&lt;!&ndash;视图块 END&ndash;&gt;-->
+        <!--</div>-->
 
-      </div>
-      <div slot="nextPage">
-        <div v-if="nextData" class="song-block">
-          <!--视图块 BEGIN-->
-          <div class="song-item"
-               :key="item" v-for='item in apiObj.page_item'
-               @touchstart.stop.prevent=""
-               @touchmove.stop.prevent=""
-               @touchend.stop.prevent=""
-          >
-            {{ nextData.data[item - 1] }}
-            <!--<songItem :item="nextData.data[item - 1]"></songItem>-->
-            <!--<div class="songbox" v-songBox="{width: 763, height: 168,data: nextData.data[item - 1]?nextData.data[item - 1]:null}"></div>-->
+      <!--</div>-->
+      <!--<div slot="nextPage">-->
+        <!--<div v-if="nextData" class="song-block">-->
+          <!--&lt;!&ndash;视图块 BEGIN&ndash;&gt;-->
+          <!--<div class="song-item"-->
+               <!--:key="item" v-for='item in apiObj.page_item'-->
+               <!--@touchstart.stop.prevent=""-->
+               <!--@touchmove.stop.prevent=""-->
+               <!--@touchend.stop.prevent=""-->
+          <!--&gt;-->
+            <!--{{ nextData.data[item - 1] }}-->
+            <!--&lt;!&ndash;<songItem :item="nextData.data[item - 1]"></songItem>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="songbox" v-songBox="{width: 763, height: 168,data: nextData.data[item - 1]?nextData.data[item - 1]:null}"></div>&ndash;&gt;-->
 
-          </div>
-          <!--视图块 END-->
-        </div>
-      </div>
+          <!--</div>-->
+          <!--&lt;!&ndash;视图块 END&ndash;&gt;-->
+        <!--</div>-->
+      <!--</div>-->
 
     </carosuel>
     <div class="carosuel-pagination" v-if='totalPage>0'>{{currentPage}} / {{totalPage>999?'999+':totalPage}}</div>
@@ -105,6 +106,19 @@
     name: "list",
     data() {
       return {
+        // template: `<div></div>`,
+        template: `
+          <div v-if="CAROSUEL_DATA" class="song-block">
+            <div class="song-item"
+                 :key="item" v-for='item in  apiObj.page_item'
+                 @touchstart.stop.prevent=""
+                 @touchmove.stop.prevent=""
+                 @touchend.stop.prevent=""
+            >
+              {{ CAROSUEL_DATA.data[item - 1] }}: {{item - 1}}
+            </div>
+        </div>
+        `,
         pageWidth: 500,
         pageHeight: 500,
         handler: null,
@@ -357,13 +371,14 @@
     height: 500px;
     overflow:hidden;
     position: absolute;
-    padding: 50px;
+    /*padding: 50px;*/
+    border: aqua;
+
     .swiper-container {
 
       .swiper-wrapper {
         .swiper-slide {
           background: antiquewhite;
-          border: aqua;
           display: inline-block;
         }
       }

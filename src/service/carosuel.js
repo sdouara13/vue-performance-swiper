@@ -87,7 +87,7 @@ class Page {
     this.elementPosition = 0;
     this.carosuelId = carosuelId;
     this.trigger = trigger;
-    console.log(trigger)
+    // console.log(trigger)
     // console.log('this.carosuelId', this.carosuelId)
   }
   setPage(element) {
@@ -873,10 +873,9 @@ Vue.directive('carosuel', {
         }
       }
       oldCarosuel.destroy();
-      binding.value.scope.$emit('reFresh');
+      binding.value.scope.$emit('refresh');
       initCarosuel($el, binding, vnode, config)
     }
-
     else if(binding.value.isInit && binding.value.chain) {
       const id = $el.dataset.id>>0;
       const carosuel = carosuelMap.get(id);

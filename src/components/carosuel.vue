@@ -1,7 +1,66 @@
-<script src="../../static/data.js"></script>
-<template>
-  <div>
-    <div class="carosuel-parent"
+<!--<template>-->
+<!--<div>-->
+<!--<div class="carosuel-parent"-->
+<!--:style="{width: pageWidth + 'px', height:pageHeight + 'px'}"-->
+<!--:class="parentClass" >-->
+<!--<div class="carosuel-container" :class="containerClass">-->
+<!--<div class="carosuel-wrapper" :class="wrapperClass"-->
+<!--:style="{width: pageWidth * 3 + 'px', height:pageHeight + 'px'}"-->
+<!--v-carosuel="{-->
+<!--chain: chainHead,-->
+<!--isInit: chainIsInit,-->
+<!--width: pageWidth,-->
+<!--height: pageHeight,-->
+<!--refresh: carosuelRefresh,-->
+<!--scope,-->
+<!--endPageNumber,-->
+<!--trigger,-->
+<!--}">-->
+<!--<div :class="slideClass" class="carosuel-item"-->
+<!--:style="{width: pageWidth + 'px', height:pageHeight + 'px'}"-->
+<!--@touchstart.stop.prevent.capture=""-->
+<!--@touchmove.stop.prevent.capture=""-->
+<!--@touchend.prevent.capture="enableTouch($event)">-->
+
+<!--<slot name="prevPage"></slot>-->
+<!--&lt;!&ndash;{{prevData && prevData.pageNumber}}&ndash;&gt;-->
+
+<!--</div>-->
+<!--<div :class="slideClass" class="carosuel-item"-->
+<!--:style="{width: pageWidth + 'px', height:pageHeight + 'px'}"-->
+<!--@touchstart.stop.prevent.capture=""-->
+<!--@touchmove.stop.prevent.capture=""-->
+<!--@touchend.prevent.capture="enableTouch($event)">-->
+
+<!--<slot name="centerPage"></slot>-->
+<!--&lt;!&ndash;{{centerData && centerData.pageNumber}}&ndash;&gt;-->
+
+<!--</div>-->
+<!--<div :class="slideClass" class="carosuel-item"-->
+<!--:style="{width: pageWidth + 'px', height:pageHeight + 'px'}"-->
+<!--@touchstart.stop.prevent.capture=""-->
+<!--@touchmove.stop.prevent.capture=""-->
+<!--@touchend.prevent.capture="enableTouch($event)">-->
+
+
+<!--<slot name="nextPage"></slot>-->
+<!--&lt;!&ndash;{{nextData && nextData.pageNumber}}&ndash;&gt;-->
+
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+
+
+<!--</div>-->
+<!--</div>-->
+<!--</template>-->
+
+<script>
+  import Vue from 'vue';
+  import { PageData } from '@/service/carosuel';
+
+  let renderTemplate = `
+        <div class="carosuel-parent"
          :style="{width: pageWidth + 'px', height:pageHeight + 'px'}"
          :class="parentClass" >
       <div class="carosuel-container" :class="containerClass">
@@ -23,47 +82,108 @@
                @touchmove.stop.prevent.capture=""
                @touchend.prevent.capture="enableTouch($event)">
 
-            <slot name="prevPage"></slot>
-            <!--{{prevData && prevData.pageNumber}}-->
+            {{prev-slot}}
+    </div>
+    <div :class="slideClass" class="carosuel-item"
+    :style="{width: pageWidth + 'px', height:pageHeight + 'px'}"
+    @touchstart.stop.prevent.capture=""
+    @touchmove.stop.prevent.capture=""
+    @touchend.prevent.capture="enableTouch($event)">
 
-          </div>
-          <div :class="slideClass" class="carosuel-item"
-               :style="{width: pageWidth + 'px', height:pageHeight + 'px'}"
-               @touchstart.stop.prevent.capture=""
-               @touchmove.stop.prevent.capture=""
-               @touchend.prevent.capture="enableTouch($event)">
+    {{center-slot}}
+    </div>
+    <div :class="slideClass" class="carosuel-item"
+    :style="{width: pageWidth + 'px', height:pageHeight + 'px'}"
+    @touchstart.stop.prevent.capture=""
+    @touchmove.stop.prevent.capture=""
+    @touchend.prevent.capture="enableTouch($event)">
 
-            <slot name="centerPage"></slot>
-            <!--{{centerData && centerData.pageNumber}}-->
-
-          </div>
-          <div :class="slideClass" class="carosuel-item"
-               :style="{width: pageWidth + 'px', height:pageHeight + 'px'}"
-               @touchstart.stop.prevent.capture=""
-               @touchmove.stop.prevent.capture=""
-               @touchend.prevent.capture="enableTouch($event)">
-
-
-            <slot name="nextPage"></slot>
-            <!--{{nextData && nextData.pageNumber}}-->
-
-          </div>
-        </div>
-      </div>
-
+    {{next-slot}}
 
     </div>
-  </div>
-</template>
-
-<script>
-  import { PageData } from '@/service/carosuel';
+    </div>
+    </div>
+    </div>
+    `;
 
   export default {
     name: "carosuel",
     components: {
     },
+    render: function (createElement, context) {
+      const self = this;
+      const args = arguments;
+      const nameArray = ['prevData', 'centerData', 'nextData'];
+
+      return createElement(
+        'div',   // tag name 标签名称
+        {
+          class: 'carosuel-parent ' + this.parentClass ,
+          style: {
+            width: this.pageWidth + 'px',
+            height: this.pageHeight + 'px',
+          }
+        }, // 子组件中的阵列
+        [
+          createElement(
+            'div',
+            {
+              class:  'carosuel-container ' + this.containerClass,
+            },
+            [
+              createElement(
+                'div',
+                {
+                  class: 'carosuel-wrapper ' + this.wrapperClass,
+                  style: {
+                    width: this.pageWidth * 3 + 'px',
+                    height: this.pageHeight + 'px'
+                  },
+                  directives: [
+                    {
+                      name: 'carosuel',
+                      value: {
+                        chain: this.chainHead,
+                        isInit: this.chainIsInit,
+                        width: this.pageWidth,
+                        height: this.pageHeight,
+                        refresh: this.carosuelRefresh,
+                        scope: this.scope,
+                        endPageNumber: this.endPageNumber,
+                        trigger: this.trigger,
+                      }
+                    }
+                  ]
+                },
+                nameArray.map(function (index) {
+                  return createElement('div',
+                    {
+                      class: self.slideClass + ' carosuel-item',
+                      style: {
+                        width: self.pageWidth + 'px',
+                        height: self.pageHeight + 'px'
+                      }
+                    },
+                    [
+                      // TODO: 编辑数据模板
+                      Vue.compile(self.template.replace(/CAROSUEL_DATA/g, index))
+                        .render
+                        .apply(self.$parent, args)
+                    ]
+                  )
+                })
+
+              )
+            ]
+          )
+        ]
+      )
+    },
     props: {
+      template: {
+        type: String,
+        default: ""
+      },
       prevLoadNumber: {
         type: Number,
         defualt: 5
@@ -145,8 +265,11 @@
         isSlide: false,
       }
     },
+
     mounted() {
-      this.$on('reFresh', () => {
+      // console.log(this.template);
+
+      this.$on('refresh', () => {
         this.carosuelRefresh = false;
       });
       this.$on('carosuelHandler', (obj) => {
@@ -633,10 +756,11 @@
     margin-right: auto;
     height: 500px;
     width: 500px;
+    border: 1px solid #000;
+
     .carosuel-container{
       width: 100%;
       height:100%;
-      border: 1px solid #000;
       position: absolute;
       overflow: hidden;
       .carosuel-wrapper{
