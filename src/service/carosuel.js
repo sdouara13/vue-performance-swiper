@@ -627,17 +627,17 @@ class Carosuel {
     let nextTranslate = `translate3d(${this.nextPointer.stepWidth(-2)}px, 0, 0)`;
     const self = this;
     const changeElement = this.nextPointer.element;
-    this.nextPointer.element.style.display = 'none';
-    this.nextPointer.element.style.transitionDuration = '0ms';
-    this.centerPointer.element.style.transform = centerTranslate;
+    this.centerPointer.element.style.transitionDuration = '200ms';
+    this.centerPointer.element.style.willChange = 'transform';
+		this.centerPointer.element.style.transform = centerTranslate;
+    this.prevPointer.element.style.transitionDuration = '200ms';
+    this.prevPointer.element.style.willChange = 'transform';
     this.prevPointer.element.style.transform = prevTranslate;
+    this.nextPointer.element.style.transitionDuration = '0ms';
+    this.nextPointer.element.style.willChange = 'auto';
     this.nextPointer.element.style.transform = nextTranslate;
 
-    setTimeout(() => {
-      // 由于指针指向改变，原先的next被prev指针指向
-      changeElement.style.display = 'block';
-      changeElement.style.transitionDuration = '300ms';
-    }, 0);
+    
 
 
 
@@ -759,19 +759,15 @@ class Carosuel {
     let prevTranslate = `translate3d(${this.prevPointer.stepWidth(2)}px, 0, 0)`;
     const self = this;
     const changeElement = this.prevPointer.element;
-    this.prevPointer.element.style.display = 'none';
-    this.prevPointer.element.style.transitionDuration = '0ms';
-    this.centerPointer.element.style.transform = centerTranslate;
+    this.centerPointer.element.style.transitionDuration = '200ms';
+		this.centerPointer.element.style.willChange = 'transform';
+		this.centerPointer.element.style.transform = centerTranslate;
+    this.nextPointer.element.style.transitionDuration = '200ms';
+    this.nextPointer.element.style.willChange = 'transform';
     this.nextPointer.element.style.transform = nextTranslate;
+    this.prevPointer.element.style.transitionDuration = '0ms';
+    this.prevPointer.element.style.willChange = 'auto';
     this.prevPointer.element.style.transform = prevTranslate;
-    // self.prevPointer.element.style.display = 'block';
-    // self.prevPointer.element.style.transitionDuration = '300ms';
-    setTimeout(() => {
-      // 由于指针指向改变，原先的prev被next指针指向
-      changeElement.style.display = 'block';
-      changeElement.style.transitionDuration = '300ms';
-    }, 0);
-
 
 
     this.prevPointer.setPageNum(this.nextPointer.getPageNum() + 1);
